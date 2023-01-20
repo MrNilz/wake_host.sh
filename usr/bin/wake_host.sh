@@ -32,7 +32,7 @@ grep "$listen_dns" <$TCPDUMP_PIPE >$GREP_PIPE &
 GREP_PID=$!
 
 # Create pipemill process
-while read line ; do etherwake "$host_mac" ; logger "Captured DNS call to $listen_dns and sending WOL to $host_mac" ; done <$GREP_PIPE 
+while read line ; do etherwake -i "$listen_interface" "$host_mac" ; logger "Captured DNS call to $listen_dns and sending WOL to $host_mac" ; done <$GREP_PIPE 
 
 # Wait for first process to terminate
 wait "$TCPDUMP_PID"
