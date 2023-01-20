@@ -2,7 +2,7 @@
 
 If you have a local DNS-Server Running and an other server that goes to sleep; but hat wake on lan (WOL) enabled you can use this script to wake your sleeping server with a magic package every time the DNS of your sleeping server is queried. 
 
-This script is an alternative to wake_host.py but relies on shell capabilities to achive the results. So it uses less system ressources.
+This script is an alternative to wake_host.py (https://github.com/MrNilz/wake_host.py) but relies on shell capabilities to achive the results. So it uses less system ressources.
 
 # Config
 Change the values in etc/config/wake_host_shell to the desired values
