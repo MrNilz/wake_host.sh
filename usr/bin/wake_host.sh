@@ -12,12 +12,12 @@ _term() {
   # echo "Deleting $TCPDUMP_PIPE $GREP_PIPE" 
   rm $TCPDUMP_PIPE
   rm $GREP_PIPE
-  logger "Stopped watching for DNS call to $listen_dns"
+  logger -t WakeHost "Stopped watching for DNS call to $listen_dns"
 }
 
 trap _term SIGTERM
 
-logger "Start watching for DNS call to $listen_dns on interface $listen_interface and sending WOL to $host_mac"
+logger -t WakeHost "Start watching for DNS call to $listen_dns on interface $listen_interface and sending WOL to $host_mac"
 
 # Create tcpdump process with a named pipe and store PID
 TCPDUMP_PIPE=$(mktemp -u)
@@ -32,7 +32,7 @@ grep "$listen_dns" <$TCPDUMP_PIPE >$GREP_PIPE &
 GREP_PID=$!
 
 # Create pipemill process
-while read line ; do etherwake -i "$listen_interface" "$host_mac" ; logger "Captured DNS call to $listen_dns and sending WOL to $host_mac" ; done <$GREP_PIPE 
+while read line ; do etherwake -i "$listen_interface" "$host_mac" ; logger -t WakeHost "Captured DNS call to $listen_dns and sending WOL to $host_mac" ; done <$GREP_PIPE 
 
 # Wait for first process to terminate
 wait "$TCPDUMP_PID"
