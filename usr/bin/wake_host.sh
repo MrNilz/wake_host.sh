@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 listen_interface=$1
 listen_dns=$2
@@ -33,7 +33,7 @@ GREP_PID=$!
 
 # Create pipemill process
 while read line ; do 
-  etherwake -i "$listen_interface" "$host_mac"
+  etherwake -i "$listen_interface" "$host_mac" & disown
   logger -t WakeHost "Captured DNS call to $listen_dns and sending WOL to $host_mac"
 done <$GREP_PIPE 
 
