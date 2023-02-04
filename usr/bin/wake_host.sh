@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 
 listen_interface=$1
 listen_dns=$2
@@ -28,11 +28,15 @@ TCPDUMP_PID=$!
 # Create grep process with a named pipe and store PID
 GREP_PIPE=$(mktemp -u)
 mkfifo $GREP_PIPE
-grep "$listen_dns" <$TCPDUMP_PIPE >$GREP_PIPE & 
+grep --line-buffered "$listen_dns" <$TCPDUMP_PIPE >$GREP_PIPE & 
 GREP_PID=$!
 
 # Create pipemill process
-while read line ; do etherwake -i "$listen_interface" "$host_mac" ; logger -t WakeHost "Captured DNS call to $listen_dns and sending WOL to $host_mac" ; done <$GREP_PIPE 
+while read line ; do 
+  etherwake -i "$listen_interface" "$host_mac"
+  logger -t WakeHost "Captured DNS call to $listen_dns and sending WOL to $host_mac"
+done <$GREP_PIPE 
 
 # Wait for first process to terminate
 wait "$TCPDUMP_PID"
+
