@@ -11,7 +11,7 @@ Change the values in etc/config/wake_host_shell to the desired values
 
 ## Prequisites
 
-You need the package `tcpdump` and `etherwake` installed.
+You need the package `bash`,`tcpdump` and `etherwake` installed.
 
 ## Install on local DNS
 
