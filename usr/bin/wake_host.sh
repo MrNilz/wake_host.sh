@@ -4,6 +4,13 @@ listen_interface=$1
 listen_dns=$2
 host_mac=$3
 
+# check for necessary commands
+if ! type tcpdump &> /dev/null || ! type etherwake &> /dev/null || ! type logger &> /dev/null || ! type mkfifo &> /dev/null || ! type mktemp &> /dev/null || ! type wait &> /dev/null;
+    then
+    echo "Necessary dependency is missing. tcpdump, etherwake, logger, mkfifo, mktemp, wait are required - exiting"
+    exit 1
+fi
+
 _term() { 
   # echo "Caught SIGTERM signal!" 
   # echo "Killing $TCPDUMP_PID $GREP_PID"
@@ -22,7 +29,7 @@ logger -t WakeHost "Start watching for DNS call to $listen_dns on interface $lis
 # Create tcpdump process with a named pipe and store PID
 TCPDUMP_PIPE=$(mktemp -u)
 mkfifo $TCPDUMP_PIPE
-/usr/sbin/tcpdump -nn -p -s0 -i "$listen_interface" port 53 >$TCPDUMP_PIPE 2>&1 & 
+tcpdump -nn -p -s0 -i "$listen_interface" port 53 >$TCPDUMP_PIPE 2>&1 & 
 TCPDUMP_PID=$!
 
 # Create grep process with a named pipe and store PID
